@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { sendContactEmail } from "@/lib/emailjs";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { contactFormSchema } from "@/lib/validations/contact";
 
@@ -14,46 +15,6 @@ function getClientIp(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0]?.trim() ?? "unknown";
   return request.headers.get("x-real-ip") ?? "unknown";
-}
-
-async function sendViaEmailJS(params: {
-  name: string;
-  email: string;
-  service: string;
-  message: string;
-}) {
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const templateId = process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
-
-  if (!serviceId || !templateId || !publicKey) {
-    return { ok: false as const, reason: "not_configured" as const };
-  }
-
-  const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      service_id: serviceId,
-      template_id: templateId,
-      user_id: publicKey,
-      ...(privateKey ? { accessToken: privateKey } : {}),
-      template_params: {
-        from_name: params.name,
-        from_email: params.email,
-        service: params.service,
-        message: params.message,
-        reply_to: params.email,
-      },
-    }),
-  });
-
-  if (!response.ok) {
-    return { ok: false as const, reason: "send_failed" as const };
-  }
-
-  return { ok: true as const };
 }
 
 export async function POST(request: Request) {
@@ -91,18 +52,24 @@ export async function POST(request: Request) {
     );
   }
 
-  const result = await sendViaEmailJS(data);
+  const result = await sendContactEmail(data);
 
   if (result.reason === "not_configured") {
     return NextResponse.json(
-      { error: "Contact form is not configured yet. Please email directly." },
+      {
+        error:
+          "Contact form env vars are missing on the server. Add EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, and EMAILJS_PUBLIC_KEY in Vercel (Production), then redeploy.",
+      },
       { status: 503 },
     );
   }
 
   if (!result.ok) {
     return NextResponse.json(
-      { error: "Could not send your message. Please try again or email directly." },
+      {
+        error:
+          "Could not send your message. Check EmailJS template variables and private key, then try again.",
+      },
       { status: 502 },
     );
   }
