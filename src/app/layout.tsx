@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
 import { StructuredData } from "@/components/StructuredData";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { createSiteMetadata } from "@/lib/site-metadata";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -22,59 +23,7 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ayoadeyi.vercel.app";
-
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: "Adeyi Ayomide Ephrathah | Virtual Personal Assistant",
-    template: "%s | Adeyi Ayomide",
-  },
-  description:
-    "Executive virtual assistant based in Nigeria. Inbox, calendar, travel, and operations support for founders. Remote, aligned to European hours.",
-  keywords: [
-    "virtual personal assistant",
-    "executive assistant Nigeria",
-    "remote administrative assistant",
-    "operations support",
-    "travel coordination",
-    "inbox management",
-    "European timezone assistant",
-    "ALX virtual assistant",
-  ],
-  authors: [{ name: "Adeyi Ayomide Ephrathah", url: siteUrl }],
-  creator: "Adeyi Ayomide Ephrathah",
-  alternates: { canonical: siteUrl },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: siteUrl,
-    siteName: "Adeyi Ayomide Ephrathah",
-    title: "Adeyi Ayomide Ephrathah | Virtual Personal Assistant",
-    description:
-      "Executive virtual assistant for founders. Inbox, calendar, travel, and operations handled with care.",
-    images: [
-      {
-        url: "/images/profile.jpg",
-        width: 800,
-        height: 1000,
-        alt: "Adeyi Ayomide Ephrathah, Virtual Personal Assistant",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Adeyi Ayomide Ephrathah | Virtual Personal Assistant",
-    description:
-      "Executive virtual assistant for founders. Inbox, calendar, travel, and operations handled with care.",
-    images: ["/images/profile.jpg"],
-  },
-  robots: { index: true, follow: true },
-  icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
-  },
-};
+export const metadata: Metadata = createSiteMetadata();
 
 export const viewport: Viewport = {
   themeColor: [
