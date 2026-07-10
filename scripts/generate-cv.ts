@@ -2,9 +2,13 @@
  * Editorial light-theme CV — prints cleanly, forwards cleanly, ATS-friendly.
  * Run: npm run generate-cv
  */
-import { PDFDocument, PDFFont, PDFPage, StandardFonts, rgb } from "pdf-lib";
-import { writeFileSync } from "fs";
+import fontkit from "@pdf-lib/fontkit";
+import { PDFDocument, PDFFont, PDFPage, rgb } from "pdf-lib";
+import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+
+const FONT_DIR = join(process.cwd(), "scripts", "fonts");
+const readFont = (name: string) => readFileSync(join(FONT_DIR, name));
 
 /* ----------- Page ----------- */
 const PAGE_W = 612;
@@ -38,10 +42,13 @@ const SECTION_BOTTOM = 10;
 
 async function main() {
   const pdf = await PDFDocument.create();
-  const sans = await pdf.embedFont(StandardFonts.Helvetica);
-  const sansBold = await pdf.embedFont(StandardFonts.HelveticaBold);
-  const serif = await pdf.embedFont(StandardFonts.TimesRoman);
-  const serifItalic = await pdf.embedFont(StandardFonts.TimesRomanItalic);
+  pdf.registerFontkit(fontkit);
+
+  // Portfolio fonts: Instrument Serif for headings, Plus Jakarta Sans for body.
+  const sans = await pdf.embedFont(readFont("PlusJakartaSans-Regular.ttf"), { subset: true });
+  const sansBold = await pdf.embedFont(readFont("PlusJakartaSans-Bold.ttf"), { subset: true });
+  const serif = await pdf.embedFont(readFont("InstrumentSerif-Regular.ttf"), { subset: true });
+  const serifItalic = await pdf.embedFont(readFont("InstrumentSerif-Italic.ttf"), { subset: true });
 
   // Mutable page context — a new page appended when we run out of room.
   let page: PDFPage = newPage(pdf);
