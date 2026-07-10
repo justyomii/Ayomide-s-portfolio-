@@ -17,7 +17,7 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border">
       <div className="site-container relative pb-24 pt-28 md:pb-36 md:pt-32 lg:pb-40 lg:pt-40">
-        <div className="grid items-center gap-16 lg:grid-cols-[1fr_auto] lg:gap-20 xl:gap-28">
+        <div className="grid gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(320px,400px)] lg:items-start lg:gap-20 xl:gap-24">
           <div className="max-w-xl">
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 8 }}
@@ -116,11 +116,13 @@ export function Hero() {
             initial={reduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.12 }}
-            className="flex shrink-0 flex-col items-center gap-4 lg:items-end lg:pt-2"
+            className="flex flex-col items-center gap-5 lg:sticky lg:top-32 lg:items-stretch lg:pt-14 xl:pt-16"
           >
-            <ProfilePortrait alt={site.name} priority size="lg" />
-            <div className="hidden max-w-[280px] text-center font-sans text-[12px] text-muted lg:block lg:text-right">
-              {site.location} · Working alongside European teams
+            <ProfilePortrait alt={site.name} priority size="hero" className="w-full" />
+            <div className="flex items-center justify-between gap-4 font-sans text-[11px] uppercase tracking-[0.14em] text-muted">
+              <span>{site.location}</span>
+              <span className="h-px flex-1 bg-border" aria-hidden />
+              <span>European hours</span>
             </div>
           </motion.div>
         </div>

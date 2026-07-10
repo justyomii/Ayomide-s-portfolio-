@@ -5,13 +5,15 @@ interface ProfilePortraitProps {
   alt: string;
   priority?: boolean;
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "hero";
 }
 
 const widthClasses = {
   sm: "w-[160px] sm:w-[180px]",
   md: "w-[200px] sm:w-[220px]",
   lg: "w-[280px] sm:w-[320px] lg:w-[360px]",
+  // hero: fills the parent column (used by the hero right column)
+  hero: "w-full max-w-[400px] mx-auto lg:mx-0",
 };
 
 export function ProfilePortrait({
