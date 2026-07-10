@@ -28,8 +28,8 @@
   --accent-muted: #8b634726;
   --foreground: #1a1816;
   --muted: #6b6560;
-  --border: #1a181610;
-  --border-strong: #1a181618;
+  --border: #1a181612;
+  --border-strong: #1a18161f;
   color-scheme: light;
 }
 
@@ -43,14 +43,18 @@
   --accent-muted: #a67c5d26;
   --foreground: #f5f5f4;
   --muted: #9ca3af;
-  --border: #ffffff0d;
-  --border-strong: #ffffff18;
+  --border: #ffffff0f;
+  --border-strong: #ffffff1f;
   color-scheme: dark;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Better font rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -71,6 +75,23 @@
     @apply bg-background font-sans text-foreground antialiased;
     font-size: 16px;
     line-height: 1.7;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  /* Subtle grain — adds paper-like texture without being noisy */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.55;
+    mix-blend-mode: overlay;
+  }
+
+  .dark body::before {
+    opacity: 0.35;
   }
 
   ::selection {
@@ -80,11 +101,16 @@
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-accent;
   }
+
+  /* Smooth details animation */
+  details > summary {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 @layer utilities {
   .site-container {
-    @apply mx-auto w-full max-w-5xl px-6 md:px-10 lg:px-12;
+    @apply mx-auto w-full max-w-5xl px-6 md:px-10 lg:px-12 xl:max-w-6xl;
   }
 
   .section-padding {
@@ -92,24 +118,28 @@
   }
 
   .section-label {
-    @apply font-sans text-[13px] font-medium tracking-wide text-accent;
+    @apply font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-accent;
   }
 
   .heading-display {
     @apply font-serif font-normal tracking-[-0.02em] text-foreground;
-    line-height: 1.12;
+    line-height: 1.08;
   }
 
   .heading-serif {
-    @apply font-serif font-normal tracking-[-0.02em] text-foreground;
+    @apply font-serif font-normal tracking-[-0.015em] text-foreground;
   }
 
   .text-balance {
     text-wrap: balance;
   }
 
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
   .card-surface {
-    @apply rounded-lg border border-border bg-surface;
+    @apply rounded-2xl border border-border bg-surface;
   }
 
   .portrait-glow {

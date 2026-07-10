@@ -1,230 +1,292 @@
 /**
- * Premium dark CV matching portfolio palette. Run: npm run generate-cv
+ * Editorial light-theme CV — prints cleanly, forwards cleanly, ATS-friendly.
+ * Run: npm run generate-cv
  */
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, PDFFont, PDFPage, StandardFonts, rgb } from "pdf-lib";
 import { writeFileSync } from "fs";
 import { join } from "path";
 
+/* ----------- Page ----------- */
 const PAGE_W = 612;
 const PAGE_H = 792;
-const MARGIN = 48;
-const CONTENT_W = PAGE_W - MARGIN * 2;
+const MARGIN_X = 56;
+const MARGIN_Y = 56;
+const CONTENT_W = PAGE_W - MARGIN_X * 2;
 
-const BG = rgb(0.04, 0.04, 0.04);
-const SURFACE = rgb(0.07, 0.066, 0.062);
-const TEXT = rgb(0.96, 0.96, 0.956);
-const MUTED = rgb(0.61, 0.64, 0.69);
-const ACCENT = rgb(0.651, 0.486, 0.365);
-const ACCENT_LINE = rgb(0.651, 0.486, 0.365);
+/* ----------- Palette (light) ----------- */
+const BG = rgb(0.984, 0.965, 0.953); // warm off-white
+const INK = rgb(0.101, 0.094, 0.086);
+const MUTED = rgb(0.42, 0.4, 0.376);
+const ACCENT = rgb(0.545, 0.388, 0.278); // bronze
+const RULE = rgb(0.83, 0.8, 0.76);
 
-const BODY = 9.5;
-const SMALL = 8.5;
-const SECTION = 10;
-const NAME = 22;
-const SUBTITLE = 11;
-const LINE = 13;
-const SECTION_GAP = 18;
+/* ----------- Type scale ----------- */
+const T_NAME = 28;
+const T_ROLE = 11;
+const T_META = 9;
+const T_SECTION = 9.5;
+const T_BODY = 10;
+const T_LEAD = 10.5;
+const T_JOB = 11;
+const T_JOB_META = 9.5;
+const T_BULLET = 10;
+
+const LINE_H_BODY = 14;
+const LINE_H_TIGHT = 12.5;
+const SECTION_TOP = 14;
+const SECTION_BOTTOM = 10;
 
 async function main() {
   const pdf = await PDFDocument.create();
-  const page = pdf.addPage([PAGE_W, PAGE_H]);
-  const regular = await pdf.embedFont(StandardFonts.Helvetica);
-  const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
-  const italic = await pdf.embedFont(StandardFonts.HelveticaOblique);
+  const sans = await pdf.embedFont(StandardFonts.Helvetica);
+  const sansBold = await pdf.embedFont(StandardFonts.HelveticaBold);
+  const serif = await pdf.embedFont(StandardFonts.TimesRoman);
+  const serifItalic = await pdf.embedFont(StandardFonts.TimesRomanItalic);
 
-  page.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: PAGE_H, color: BG });
+  // Mutable page context — a new page appended when we run out of room.
+  let page: PDFPage = newPage(pdf);
+  let y = PAGE_H - MARGIN_Y;
 
-  let y = PAGE_H - MARGIN;
-
-  const drawText = (
-    text: string,
-    x: number,
-    size: number,
-    font = regular,
-    color = TEXT,
-    maxW = CONTENT_W,
-  ) => {
-    for (const line of wrap(text, font, size, maxW)) {
-      if (y < MARGIN + 24) return;
-      page.drawText(line, { x, y, size, font, color });
-      y -= LINE;
+  const ensureSpace = (needed: number) => {
+    if (y - needed < MARGIN_Y) {
+      page = newPage(pdf);
+      y = PAGE_H - MARGIN_Y;
     }
   };
 
-  const section = (title: string) => {
-    y -= SECTION_GAP;
-    page.drawRectangle({
-      x: MARGIN,
-      y: y - 2,
-      width: 28,
-      height: 1.5,
-      color: ACCENT_LINE,
-    });
-    y -= 10;
-    drawText(title, MARGIN, SECTION, bold, ACCENT);
-    y -= 4;
+  const draw = (
+    text: string,
+    x: number,
+    yy: number,
+    size: number,
+    font: PDFFont,
+    color = INK,
+  ) => {
+    page.drawText(text, { x, y: yy, size, font, color });
   };
 
-  // Header block
-  page.drawRectangle({
-    x: MARGIN,
-    y: y - 52,
-    width: CONTENT_W,
-    height: 68,
-    color: SURFACE,
-    borderColor: rgb(0.2, 0.18, 0.16),
-    borderWidth: 0.5,
-  });
+  const drawRight = (
+    text: string,
+    rightX: number,
+    yy: number,
+    size: number,
+    font: PDFFont,
+    color = INK,
+  ) => {
+    const w = font.widthOfTextAtSize(text, size);
+    page.drawText(text, { x: rightX - w, y: yy, size, font, color });
+  };
 
-  page.drawText("ADEYI AYOMIDE EPHRATHAH", {
-    x: MARGIN + 16,
-    y: y - 8,
-    size: NAME,
-    font: bold,
-    color: TEXT,
-  });
-  page.drawText("Virtual Assistant  ·  Operations & Admin Support", {
-    x: MARGIN + 16,
-    y: y - 30,
-    size: SUBTITLE,
-    font: regular,
-    color: ACCENT,
-  });
-  page.drawText(
-    "Nigeria (Remote)   +234 703 487 1669   adeyiephrathah@gmail.com   ayoadeyi.vercel.app",
-    {
-      x: MARGIN + 16,
-      y: y - 48,
-      size: SMALL,
-      font: regular,
-      color: MUTED,
-    },
-  );
-  y -= 88;
+  const drawWrapped = (
+    text: string,
+    x: number,
+    size: number,
+    font: PDFFont,
+    color = INK,
+    maxW = CONTENT_W,
+    lineH = LINE_H_BODY,
+  ) => {
+    for (const line of wrap(text, font, size, maxW)) {
+      ensureSpace(lineH);
+      draw(line, x, y, size, font, color);
+      y -= lineH;
+    }
+  };
 
-  section("PROFESSIONAL SUMMARY");
-  drawText(
-    "Detail-oriented Virtual Assistant with a nursing science background and proven remote support experience. Built content operations for a skincare brand, managed daily correspondence for 150+ buyers at a student marketplace, and grew a volunteer community from 7 to 50 members in 90 days. ALX-certified (in progress) with Forage credentials in customer service and professionalism.",
-    MARGIN,
-    BODY,
-    regular,
-    MUTED,
-  );
-
-  section("CORE COMPETENCIES");
-  const left = [
-    "Inbox & calendar management",
-    "Client correspondence",
-    "Content scheduling",
-    "Research & reporting",
-  ];
-  const right = [
-    "Data entry & records",
-    "Travel coordination",
-    "Community management",
-    "Attention to detail",
-  ];
-  const startY = y;
-  left.forEach((item, i) => {
-    page.drawText(`•  ${item}`, {
-      x: MARGIN,
-      y: startY - i * LINE,
-      size: BODY,
-      font: regular,
-      color: TEXT,
+  const sectionLabel = (title: string) => {
+    ensureSpace(SECTION_TOP + SECTION_BOTTOM + 20);
+    y -= SECTION_TOP;
+    page.drawRectangle({
+      x: MARGIN_X,
+      y: y + 6,
+      width: CONTENT_W,
+      height: 0.5,
+      color: RULE,
     });
-  });
-  right.forEach((item, i) => {
-    page.drawText(`•  ${item}`, {
-      x: MARGIN + CONTENT_W / 2,
-      y: startY - i * LINE,
-      size: BODY,
-      font: regular,
-      color: TEXT,
-    });
-  });
-  y = startY - left.length * LINE;
+    draw(title.toUpperCase().split("").join(" "), MARGIN_X, y - 8, T_SECTION, sansBold, ACCENT);
+    y -= 8 + SECTION_BOTTOM;
+  };
 
-  section("TECHNICAL SKILLS");
-  drawText(
-    "Google Workspace · Microsoft Office · Notion · Trello · Asana · Slack · Canva · Meta Business Suite · Instagram · LinkedIn · X",
-    MARGIN,
-    BODY,
-    regular,
-    MUTED,
+  /* ----------- Header ----------- */
+  draw("Adeyi Ayomide Ephrathah", MARGIN_X, y - 4, T_NAME, serif, INK);
+  y -= T_NAME + 4;
+
+  draw(
+    "Virtual Personal Assistant · Operations & Community Support",
+    MARGIN_X,
+    y - 8,
+    T_ROLE,
+    serifItalic,
+    ACCENT,
+  );
+  y -= T_ROLE + 12;
+
+  const contact = [
+    "Nigeria · Remote",
+    "European hours",
+    "adeyiephrathah@gmail.com",
+    "+234 703 487 1669",
+    "ayoadeyi.vercel.app",
+  ].join("   ·   ");
+  draw(contact, MARGIN_X, y - 4, T_META, sans, MUTED);
+  y -= T_META + 4;
+
+  /* ----------- Summary ----------- */
+  sectionLabel("Summary");
+  drawWrapped(
+    "Virtual Assistant working with founders and small teams across European hours. Runs inbox, calendar, travel, and daily operations for content brands, marketplaces, and Web3 communities. Built the content system for a launching skincare brand, handled daily correspondence for 150+ buyers at a student marketplace, and grew a volunteer community 7× in 90 days. Nursing background trains attention to detail and communication under pressure.",
+    MARGIN_X,
+    T_LEAD,
+    sans,
+    INK,
+    CONTENT_W,
+    14,
   );
 
-  section("EXPERIENCE");
+  /* ----------- Experience ----------- */
+  sectionLabel("Experience");
 
   const jobs = [
     {
-      title: "KD Essence",
+      company: "KD Essence",
       role: "Content & Operations Support",
+      dates: "2024 — Present",
       bullets: [
-        "Built content calendar for Gourmand Collection launch; 100+ views in first month on new account.",
-        "Own daily content creation and publishing with consistent brand voice.",
+        "Built the content calendar for the Gourmand Collection launch — 100+ views in the first month on a brand-new account.",
+        "Own daily content creation and publishing, holding a consistent brand voice across Instagram, WhatsApp, and web.",
+        "Set up posting rhythm and reply templates the founder now runs without me touching them.",
       ],
     },
     {
-      title: "Paladin's Hub",
-      role: "Client Correspondence",
+      company: "Paladin's Hub",
+      role: "Operations · Client Correspondence",
+      dates: "2024",
       bullets: [
-        "Handled daily communication with 150+ buyers within two weeks of launch.",
-        "Coordinated order flow and status tracking across all parties.",
+        "Handled daily communication with 150+ buyers within two weeks of launch — customers, vendors, and students all knew where their order stood.",
+        "Coordinated order flow across three parties with a live status tracker and running operational notes.",
+        "Kept daily operations moving without founder micromanagement.",
       ],
     },
     {
-      title: "Phoenix",
-      role: "Community Manager",
+      company: "Phoenix (as Kardeeah)",
+      role: "Community Manager · Web3",
+      dates: "2023 — 2024",
       bullets: [
-        "Grew membership from 7 to 50 in three months; managed 500+ follower campus X account.",
-        "Served as Watcher, Keeper, and Social Media Manager as Kardeeah.",
+        "Grew the community from 7 to 50 active members in 90 days; ran a 500+ follower campus X account alongside.",
+        "Held three roles simultaneously — Watcher, Keeper, Social Media Manager — through volatile launch periods.",
+        "Wrote moderation standards other mods on the team adopted.",
       ],
-    },
-    {
-      title: "Music Club",
-      role: "Vice President",
-      bullets: ["Coordinated logistics for 70+ members; kept rehearsals and events on schedule."],
     },
   ];
 
   for (const job of jobs) {
-    if (y < MARGIN + 80) break;
-    page.drawText(job.title, { x: MARGIN, y, size: BODY, font: bold, color: TEXT });
-    page.drawText(job.role, {
-      x: MARGIN + 120,
-      y,
-      size: SMALL,
-      font: italic,
-      color: ACCENT,
-    });
-    y -= LINE;
+    // Keep role + company + first bullet together as a block.
+    ensureSpace(T_JOB + T_JOB_META + LINE_H_TIGHT + 14);
+
+    draw(job.role, MARGIN_X, y, T_JOB, sansBold, INK);
+    drawRight(job.dates, PAGE_W - MARGIN_X, y, T_JOB_META, sans, MUTED);
+    y -= T_JOB + 2;
+
+    draw(job.company, MARGIN_X, y, T_JOB_META, serifItalic, ACCENT);
+    y -= T_JOB_META + 6;
+
     for (const bullet of job.bullets) {
-      for (const line of wrap(`•  ${bullet}`, regular, BODY, CONTENT_W - 12)) {
-        page.drawText(line, { x: MARGIN + 8, y, size: BODY, font: regular, color: MUTED });
-        y -= LINE;
+      const bulletLines = wrap(bullet, sans, T_BULLET, CONTENT_W - 14);
+      for (let i = 0; i < bulletLines.length; i++) {
+        ensureSpace(LINE_H_TIGHT);
+        if (i === 0) {
+          page.drawCircle({ x: MARGIN_X + 3, y: y + 3, size: 1.4, color: ACCENT });
+        }
+        draw(bulletLines[i], MARGIN_X + 12, y, T_BULLET, sans, INK);
+        y -= LINE_H_TIGHT;
       }
     }
-    y -= 4;
+    y -= 3;
   }
 
-  section("EDUCATION & CERTIFICATIONS");
-  drawText("Bachelor of Nursing Science (BNSc), University of Ilesa · Expected 2030", MARGIN, BODY, bold, TEXT);
-  drawText("Clinical documentation, patient communication, accuracy under pressure.", MARGIN, SMALL, regular, MUTED);
-  drawText("ALX Virtual Assistant Certification (In Progress)", MARGIN, BODY, regular, TEXT);
-  drawText("Forage: Customer Service & Professionalism (June 2026)", MARGIN, BODY, regular, TEXT);
+  /* ----------- Skills ----------- */
+  sectionLabel("Skills & Tools");
+  const skills = [
+    "Inbox & calendar management",
+    "Travel coordination",
+    "Client correspondence",
+    "Community management",
+    "Content scheduling",
+    "Research & reporting",
+    "Data entry & records",
+    "SOP documentation",
+  ];
+  const tools = [
+    "Google Workspace",
+    "Microsoft Office",
+    "Notion",
+    "Airtable",
+    "Slack",
+    "Discord",
+    "Trello",
+    "Asana",
+    "Calendly",
+    "Canva",
+    "Meta Business Suite",
+  ];
+
+  drawWrapped(skills.join("  ·  "), MARGIN_X, T_BODY, sans, INK, CONTENT_W, LINE_H_TIGHT);
+  y -= 4;
+  drawWrapped(tools.join("  ·  "), MARGIN_X, T_BODY - 0.5, sans, MUTED, CONTENT_W, LINE_H_TIGHT);
+
+  /* ----------- Education & Certifications ----------- */
+  sectionLabel("Education & Certifications");
+
+  const edu = [
+    {
+      title: "Bachelor of Nursing Science (BNSc)",
+      issuer: "University of Ilesa",
+      dates: "Expected 2030",
+      note: "Clinical documentation, patient communication, accuracy under pressure.",
+    },
+    {
+      title: "ALX Virtual Assistance Certification",
+      issuer: "ALX Africa",
+      dates: "In Progress",
+    },
+    {
+      title: "Customer Service & Professionalism",
+      issuer: "Forage",
+      dates: "June 2026",
+    },
+  ];
+
+  for (const item of edu) {
+    // Compact: "Title" on left with issuer inline in italic, dates right-aligned.
+    ensureSpace(T_JOB + LINE_H_TIGHT);
+    draw(item.title, MARGIN_X, y, T_JOB - 0.5, sansBold, INK);
+    drawRight(item.dates, PAGE_W - MARGIN_X, y, T_JOB_META, sans, MUTED);
+    // Issuer inline — position it after the title
+    const titleW = sansBold.widthOfTextAtSize(item.title, T_JOB - 0.5);
+    draw(`  ·  ${item.issuer}`, MARGIN_X + titleW, y, T_JOB_META, serifItalic, ACCENT);
+    y -= LINE_H_TIGHT + 2;
+    if (item.note) {
+      drawWrapped(item.note, MARGIN_X, T_BODY - 1, sans, MUTED, CONTENT_W, LINE_H_TIGHT);
+      y -= 2;
+    }
+  }
 
   const bytes = await pdf.save();
   writeFileSync(join(process.cwd(), "public", "Adeyi_Ayomide_VA_CV.pdf"), bytes);
-  console.log("Premium CV generated.");
+  console.log(
+    `✓ CV written to public/Adeyi_Ayomide_VA_CV.pdf (${(bytes.length / 1024).toFixed(1)} KB, ${pdf.getPageCount()} page${pdf.getPageCount() > 1 ? "s" : ""})`,
+  );
 }
 
-function wrap(
-  text: string,
-  font: Awaited<ReturnType<PDFDocument["embedFont"]>>,
-  size: number,
-  maxW: number,
-) {
+/* ----------- Utilities ----------- */
+
+function newPage(pdf: PDFDocument): PDFPage {
+  const p = pdf.addPage([PAGE_W, PAGE_H]);
+  p.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: PAGE_H, color: BG });
+  return p;
+}
+
+function wrap(text: string, font: PDFFont, size: number, maxW: number): string[] {
   const words = text.split(" ");
   const lines: string[] = [];
   let line = "";

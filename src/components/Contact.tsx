@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowUpRight, Calendar, Linkedin, Mail } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -68,6 +69,38 @@ export function Contact() {
     }
   };
 
+  const channels = [
+    {
+      icon: Mail,
+      label: "Email",
+      value: contact.directEmail,
+      href: `mailto:${contact.directEmail}`,
+      external: false,
+    },
+    site.linkedin
+      ? {
+          icon: Linkedin,
+          label: "LinkedIn",
+          value: "@ayomide-adeyi",
+          href: site.linkedin,
+          external: true,
+        }
+      : null,
+    {
+      icon: Calendar,
+      label: "Schedule",
+      value: contact.bookCall.label,
+      href: contact.bookCall.href,
+      external: true,
+    },
+  ].filter(Boolean) as {
+    icon: typeof Mail;
+    label: string;
+    value: string;
+    href: string;
+    external: boolean;
+  }[];
+
   return (
     <>
       <section id="contact" className="section-padding border-t border-border">
@@ -80,45 +113,39 @@ export function Contact() {
                 description={contact.lead}
               />
 
-              <div className="space-y-8 font-sans">
-                <div>
-                  <p className="text-[13px] text-muted">Email</p>
-                  <a
-                    href={`mailto:${contact.directEmail}`}
-                    className="mt-2 inline-block text-base text-foreground transition-colors hover:text-accent md:text-[17px]"
-                  >
-                    {contact.directEmail}
-                  </a>
-                </div>
-
-                <div>
-                  <p className="text-[13px] text-muted">LinkedIn</p>
-                  {site.linkedin ? (
-                    <a
-                      href={site.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 inline-block text-base text-foreground transition-colors hover:text-accent"
-                    >
-                      View profile
-                    </a>
-                  ) : (
-                    <p className="mt-2 text-base text-muted">Coming soon</p>
-                  )}
-                </div>
-
-                <div>
-                  <p className="text-[13px] text-muted">Schedule</p>
-                  <a
-                    href={contact.bookCall.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-block text-base font-medium text-accent transition-colors hover:text-accent-hover md:text-[17px]"
-                  >
-                    {contact.bookCall.label}
-                  </a>
-                </div>
-              </div>
+              <ul className="space-y-4 font-sans">
+                {channels.map((channel) => {
+                  const Icon = channel.icon;
+                  return (
+                    <li key={channel.label}>
+                      <a
+                        href={channel.href}
+                        target={channel.external ? "_blank" : undefined}
+                        rel={channel.external ? "noopener noreferrer" : undefined}
+                        className="group flex items-center gap-4 rounded-xl border border-border bg-surface/40 p-4 transition-all hover:border-accent/50 hover:bg-surface/70"
+                      >
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-border bg-background text-accent transition-colors group-hover:border-accent/40">
+                          <Icon className="h-4 w-4" aria-hidden />
+                        </span>
+                        <span className="flex-1 min-w-0">
+                          <span className="block text-[12px] uppercase tracking-wider text-muted">
+                            {channel.label}
+                          </span>
+                          <span className="mt-0.5 block truncate text-[15px] text-foreground transition-colors group-hover:text-accent md:text-base">
+                            {channel.value}
+                          </span>
+                        </span>
+                        {channel.external && (
+                          <ArrowUpRight
+                            className="h-4 w-4 shrink-0 text-muted transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
+                            aria-hidden
+                          />
+                        )}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
 
             <form
