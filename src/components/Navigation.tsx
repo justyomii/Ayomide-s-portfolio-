@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Download, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { navLinks, site } from "@/lib/content";
@@ -85,7 +85,16 @@ export function Navigation() {
           })}
         </ul>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-2 lg:flex">
+          <a
+            href={site.resumeUrl}
+            download
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface/40 px-3 py-1.5 font-sans text-[13px] font-medium text-foreground transition-colors hover:border-accent/50 hover:text-accent"
+            aria-label="Download CV"
+          >
+            <Download className="h-3.5 w-3.5" aria-hidden />
+            CV
+          </a>
           <ThemeToggle />
         </div>
 

@@ -1,4 +1,4 @@
-import { Linkedin, Mail } from "lucide-react";
+import { Download, Linkedin, Mail } from "lucide-react";
 import { navLinks, site } from "@/lib/content";
 
 export function Footer() {
@@ -33,6 +33,15 @@ export function Footer() {
                   LinkedIn
                 </a>
               )}
+              <a
+                href={site.resumeUrl}
+                download
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/50 px-3.5 py-1.5 font-sans text-[12px] text-muted transition-colors hover:border-accent/40 hover:text-accent"
+                aria-label="Download CV"
+              >
+                <Download className="h-3.5 w-3.5" aria-hidden />
+                Download CV
+              </a>
             </div>
           </div>
 
