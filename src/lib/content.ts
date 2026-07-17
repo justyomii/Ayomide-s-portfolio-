@@ -8,7 +8,7 @@ export const site = {
   linkedin: "https://www.linkedin.com/in/ayomide-adeyi-678395420",
   calendly: "https://cal.com/ayomide-adeyi-mum7tp",
   resumeUrl: "/Adeyi_Ayomide_VA_CV.pdf",
-  phone: "+234 703 487 1669",
+  phone: "+234 815 565 8621",
   portfolioUrl: "https://ayoadeyi.vercel.app",
   location: "Nigeria",
   timezone: "Flexible with European hours",

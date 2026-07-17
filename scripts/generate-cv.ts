@@ -132,7 +132,7 @@ async function main() {
     "Nigeria · Remote",
     "European hours",
     "adeyiephrathah@gmail.com",
-    "+234 703 487 1669",
+    "+234 815 565 8621",
     "ayoadeyi.vercel.app",
   ].join("   ·   ");
   draw(contact, MARGIN_X, y - 4, T_META, sans, MUTED);
