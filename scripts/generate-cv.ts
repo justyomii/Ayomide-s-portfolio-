@@ -115,7 +115,7 @@ async function main() {
   };
 
   /* ----------- Header ----------- */
-  draw("Adeyi Ayomide Ephrathah", MARGIN_X, y - 4, T_NAME, serif, INK);
+  draw("Ephrathah Adeyi Ayomide", MARGIN_X, y - 4, T_NAME, serif, INK);
   y -= T_NAME + 4;
 
   draw(
@@ -279,9 +279,9 @@ async function main() {
   }
 
   const bytes = await pdf.save();
-  writeFileSync(join(process.cwd(), "public", "Adeyi_Ayomide_VA_CV.pdf"), bytes);
+  writeFileSync(join(process.cwd(), "public", "Ephrathah_Adeyi_VA_CV.pdf"), bytes);
   console.log(
-    `✓ CV written to public/Adeyi_Ayomide_VA_CV.pdf (${(bytes.length / 1024).toFixed(1)} KB, ${pdf.getPageCount()} page${pdf.getPageCount() > 1 ? "s" : ""})`,
+    `✓ CV written to public/Ephrathah_Adeyi_VA_CV.pdf (${(bytes.length / 1024).toFixed(1)} KB, ${pdf.getPageCount()} page${pdf.getPageCount() > 1 ? "s" : ""})`,
   );
 }
 

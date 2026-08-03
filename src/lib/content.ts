@@ -1,18 +1,18 @@
 export const site = {
-  name: "Adeyi Ayomide Ephrathah",
-  shortName: "Ayomide",
+  name: "Ephrathah Adeyi Ayomide",
+  shortName: "Ephrathah",
   alias: "Kardeeah",
   title: "Virtual Personal Assistant",
   subtitle: "Operations & Community Support",
   email: "adeyiephrathah@gmail.com",
   linkedin: "https://www.linkedin.com/in/ayomide-adeyi-678395420",
   calendly: "https://cal.com/ayomide-adeyi-mum7tp",
-  resumeUrl: "/Adeyi_Ayomide_VA_CV.pdf",
+  resumeUrl: "/Ephrathah_Adeyi_VA_CV.pdf",
   phone: "+234 815 565 8621",
   portfolioUrl: "https://ayoadeyi.vercel.app",
   location: "Nigeria",
   timezone: "Flexible with European hours",
-  copyright: "© 2026 Adeyi Ayomide Ephrathah",
+  copyright: "© 2026 Ephrathah Adeyi Ayomide",
   tagline: "Nigeria · Remote · European hours",
 } as const;
 
@@ -51,7 +51,7 @@ export const hero = {
 export const about = {
   label: "About",
   headline: "The person behind the work",
-  imageAlt: "Adeyi Ayomide Ephrathah, virtual personal assistant",
+  imageAlt: "Ephrathah Adeyi Ayomide, virtual personal assistant",
   paragraphs: [
     "I'm a virtual assistant based in Nigeria, supporting founders and small teams with admin, operations, travel, and community work. I stay organized, communicate clearly, and handle the details before they become problems.",
     "I've built content systems for KD Essence, a perfume and skincare brand; managed community and communications for Phoenix, a Web3 project, under the alias Kardeeah; and coordinated daily operations for Paladin's Hub, a student delivery marketplace.",

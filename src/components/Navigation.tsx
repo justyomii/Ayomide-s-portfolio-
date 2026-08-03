@@ -63,7 +63,7 @@ export function Navigation() {
           className="font-sans text-[15px] font-medium tracking-tight text-foreground"
           onClick={() => setMobileOpen(false)}
         >
-          Ayomide Adeyi
+          Ephrathah Adeyi
         </Link>
 
         <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex" role="list">

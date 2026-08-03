@@ -41,18 +41,18 @@ export function ProfilePortrait({
           alt={alt}
           fill
           priority={priority}
-          // Subtle editorial grade: cool the punchy yellow bg, keep skin warm,
-          // lift contrast a hair so the frame reads as one system with the site.
-          className="object-cover object-[center_20%] transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03] [filter:saturate(0.82)_contrast(1.04)_brightness(0.96)]"
+          // Very light editorial grade — neutral studio bg means we don't need
+          // to fight yellow anymore, just a whisper of contrast + warmth.
+          className="object-cover object-[center_18%] transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03] [filter:contrast(1.03)_brightness(0.98)]"
           sizes="(max-width: 640px) 320px, (max-width: 1024px) 340px, 360px"
         />
-        {/* Warm bronze wash — pulls the background toward the palette */}
+        {/* Whisper of bronze warmth — very subtle */}
         <div
           className="pointer-events-none absolute inset-0 mix-blend-soft-light"
           aria-hidden
           style={{
             background:
-              "linear-gradient(180deg, color-mix(in srgb, var(--accent) 22%, transparent) 0%, color-mix(in srgb, var(--accent) 10%, transparent) 50%, color-mix(in srgb, var(--accent) 18%, transparent) 100%)",
+              "linear-gradient(180deg, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 45%, color-mix(in srgb, var(--accent) 6%, transparent) 100%)",
           }}
         />
         {/* Subtle vignette — focus the eye on her face */}
@@ -61,7 +61,7 @@ export function ProfilePortrait({
           aria-hidden
           style={{
             background:
-              "radial-gradient(ellipse 90% 90% at 50% 45%, transparent 55%, color-mix(in srgb, var(--bg) 28%, transparent) 100%)",
+              "radial-gradient(ellipse 95% 95% at 50% 42%, transparent 60%, color-mix(in srgb, var(--bg) 22%, transparent) 100%)",
           }}
         />
         {/* Bottom fade — grounds the portrait into the layout */}
@@ -70,7 +70,7 @@ export function ProfilePortrait({
           aria-hidden
           style={{
             background:
-              "linear-gradient(to top, color-mix(in srgb, var(--bg) 30%, transparent) 0%, transparent 100%)",
+              "linear-gradient(to top, color-mix(in srgb, var(--bg) 25%, transparent) 0%, transparent 100%)",
           }}
         />
       </div>
