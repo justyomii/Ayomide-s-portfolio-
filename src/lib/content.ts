@@ -6,7 +6,7 @@ export const site = {
   subtitle: "Operations & Community Support",
   email: "adeyiephrathah@gmail.com",
   linkedin: "https://www.linkedin.com/in/ayomide-adeyi-678395420",
-  calendly: "https://cal.com/ayomide-adeyi-mum7tp",
+  calendly: "https://cal.com/ephrathah-adeyi-lasi83",
   resumeUrl: "/Ephrathah_Adeyi_VA_CV.pdf",
   phone: "+234 815 565 8621",
   portfolioUrl: "https://ayoadeyi.vercel.app",
