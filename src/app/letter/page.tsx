@@ -4,7 +4,7 @@ const letter: LetterContent = {
   label: "A letter for you",
   opening: "My love,",
   track: "/letter/theme.mp3",
-  signOff: "Duke",
+  signOff: "Akachukwu",
   paragraphs: [
     "I have written this letter in my head a hundred times, and every single time I reach the middle of it I stop, because the thing I want to say to you is larger than the words I have been given to say it with. So forgive me. Forgive me if I say it clumsily. I would rather hand you something clumsy and true than something polished and empty, for you of all people deserve the truth in its plain clothes and not dressed up to flatter you.",
 
