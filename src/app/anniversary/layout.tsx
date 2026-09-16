@@ -16,8 +16,8 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: { absolute: "Seven Months" },
-  description: "A quiet celebration.",
+  title: { absolute: "Kayomi" },
+  description: "Kachi × Yomi.",
   robots: { index: false, follow: false },
 };
 

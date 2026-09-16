@@ -14,6 +14,7 @@ export type AnniversaryMedia = {
 
 export type AnniversaryContent = {
   title: string;
+  eyebrow?: string;
   dateLine: string;
   startDate: string;
   opening: string;
@@ -227,6 +228,7 @@ function WoodRod() {
 
 export function AnniversaryScroll({
   title,
+  eyebrow = "OUR ANNIVERSARY",
   dateLine,
   startDate,
   opening,
@@ -249,6 +251,7 @@ export function AnniversaryScroll({
   const usingTrack = useRef(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
+  const lightboxVideoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -290,6 +293,18 @@ export function AnniversaryScroll({
       audioRef.current?.pause();
     };
   }, []);
+
+  // When a video opens, start it explicitly (autoplay attr alone is unreliable).
+  useEffect(() => {
+    if (lightbox?.type !== "video") return;
+    const v = lightboxVideoRef.current;
+    if (!v) return;
+    v.muted = false;
+    const tryPlay = () => v.play().catch(() => {});
+    tryPlay();
+    const id = window.setTimeout(tryPlay, 120);
+    return () => window.clearTimeout(id);
+  }, [lightbox]);
 
   const duckBackground = useCallback(
     (duck: boolean) => {
@@ -408,7 +423,7 @@ export function AnniversaryScroll({
           transition={{ duration: 0.7 }}
           className="font-[family-name:var(--font-cinzel)] text-[12px] tracking-[0.42em] text-[#c79a6a]"
         >
-          OUR ANNIVERSARY
+          {eyebrow}
         </motion.p>
         <motion.h1
           initial={reduce ? false : { opacity: 0, y: 10 }}
@@ -597,7 +612,16 @@ export function AnniversaryScroll({
               onClick={(e) => e.stopPropagation()}
             >
               {lightbox.type === "video" ? (
-                <video src={lightbox.src} poster={lightbox.poster} controls autoPlay playsInline className="max-h-[80vh] max-w-full object-contain" />
+                <video
+                  ref={lightboxVideoRef}
+                  src={lightbox.src}
+                  poster={lightbox.poster}
+                  controls
+                  autoPlay
+                  playsInline
+                  onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
+                  className="max-h-[80vh] max-w-full object-contain"
+                />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={lightbox.src} alt={lightbox.caption ?? "us"} className="max-h-[80vh] max-w-full object-contain" style={{ filter: "sepia(0.08)" }} />
