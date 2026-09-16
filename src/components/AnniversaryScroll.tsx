@@ -299,20 +299,12 @@ export function AnniversaryScroll({
     if (lightbox?.type !== "video") return;
     const v = lightboxVideoRef.current;
     if (!v) return;
-    v.muted = false;
+    v.muted = true; // keep the background song as the soundtrack
     const tryPlay = () => v.play().catch(() => {});
     tryPlay();
     const id = window.setTimeout(tryPlay, 120);
     return () => window.clearTimeout(id);
   }, [lightbox]);
-
-  const duckBackground = useCallback(
-    (duck: boolean) => {
-      if (usingTrack.current && audioRef.current) audioRef.current.muted = duck ? true : muted;
-      synthRef.current?.setMuted(duck ? true : muted);
-    },
-    [muted],
-  );
 
   const handleOpen = useCallback(() => {
     if (opened) return;
@@ -340,14 +332,10 @@ export function AnniversaryScroll({
     synthRef.current?.setMuted(next);
   };
 
-  const openMedia = (m: AnniversaryMedia) => {
-    setLightbox(m);
-    if (m.type === "video") duckBackground(true);
-  };
-  const closeLightbox = () => {
-    if (lightbox?.type === "video") duckBackground(false);
-    setLightbox(null);
-  };
+  // Videos play muted so the song keeps going as the soundtrack.
+  // (Viewers can unmute a clip from its controls if they want its own sound.)
+  const openMedia = (m: AnniversaryMedia) => setLightbox(m);
+  const closeLightbox = () => setLightbox(null);
 
   const scrollByCards = (dir: number) => {
     const el = carouselRef.current;
@@ -618,6 +606,7 @@ export function AnniversaryScroll({
                   poster={lightbox.poster}
                   controls
                   autoPlay
+                  muted
                   playsInline
                   onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
                   className="max-h-[80vh] max-w-full object-contain"
