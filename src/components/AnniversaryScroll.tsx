@@ -491,7 +491,7 @@ export function AnniversaryScroll({
             <div className="pointer-events-none absolute inset-0" aria-hidden style={{ boxShadow: "inset 0 0 90px 10px rgba(120,85,40,0.35)" }} />
 
             <div className="relative px-7 py-14 sm:px-14 sm:py-16">
-              <h2 className="text-center font-[family-name:var(--font-cinzel)] text-[22px] tracking-[0.1em] text-[#5a4227]">
+              <h2 className="text-center font-[family-name:var(--font-lora)] text-[clamp(1.4rem,4.4vw,1.9rem)] italic leading-snug text-[#5a4227]">
                 {opening}
               </h2>
 

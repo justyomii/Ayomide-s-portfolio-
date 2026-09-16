@@ -5,39 +5,43 @@ const content: AnniversaryContent = {
   dateLine: "16 September 2026",
   // Day counter is computed from this. Adjust to your true start date.
   startDate: "2026-02-16",
-  opening: "My love,",
+  opening: "Ẹ káàárọ̀, ìyàwó mi ẹlẹ́wà, arẹwà mi.",
   track: "/anniversary/theme.mp3",
   signOff: "Akachukwu",
-  ps: "P.S. I kept every one of these. Scroll slowly. I want you to see what I see.",
-  // Drop your files in public/anniversary/ using these exact names.
-  // Photos: photo-1.jpg ... ; videos: video-1.mp4 ... (poster optional).
-  // Until a file exists, its frame shows a soft placeholder. Edit captions freely,
-  // add or remove entries as you like, and set type:"video" for clips.
+  ps: "P.S. Scroll down slowly. I kept a few of us.",
+  // Curated from the "yomi" folder, web-optimized. Captions are yours to edit.
   media: [
-    { type: "image", src: "/anniversary/photo-1.jpg", caption: "the day it began", rotate: -3 },
-    { type: "image", src: "/anniversary/photo-2.jpg", caption: "your favourite laugh", rotate: 2.5 },
-    { type: "video", src: "/anniversary/video-1.mp4", caption: "this one, on loop", rotate: -1.5 },
-    { type: "image", src: "/anniversary/photo-3.jpg", caption: "us, unposed", rotate: 2 },
-    { type: "video", src: "/anniversary/video-2.mp4", caption: "your laugh, with sound", rotate: 3 },
+    { type: "image", src: "/anniversary/photo-1.jpg", caption: "the two of us", rotate: -3 },
+    { type: "image", src: "/anniversary/photo-2.jpg", caption: "this smile", rotate: 2.5 },
+    { type: "video", src: "/anniversary/video-1.mp4", poster: "/anniversary/video-1.jpg", caption: "us, being ridiculous", rotate: -2 },
+    { type: "image", src: "/anniversary/photo-3.jpg", caption: "us", rotate: 3 },
+    { type: "image", src: "/anniversary/photo-4.jpg", caption: "my favourite person", rotate: -2 },
+    { type: "video", src: "/anniversary/video-2.mp4", poster: "/anniversary/video-2.jpg", caption: "your laugh", rotate: 2 },
+    { type: "image", src: "/anniversary/photo-5.jpg", caption: "just us", rotate: -3 },
+    { type: "image", src: "/anniversary/photo-6.jpg", caption: "that face I love", rotate: 2 },
+    { type: "video", src: "/anniversary/video-3.mp4", poster: "/anniversary/video-3.jpg", caption: "you, unfiltered", rotate: -1.5 },
+    { type: "image", src: "/anniversary/photo-7.jpg", caption: "caught you", rotate: 3 },
+    { type: "image", src: "/anniversary/photo-8.jpg", caption: "me, waiting for you", rotate: -2.5 },
+    { type: "video", src: "/anniversary/video-4.mp4", poster: "/anniversary/video-4.jpg", caption: "a whole minute of us", rotate: 2 },
+    { type: "image", src: "/anniversary/photo-9.jpg", caption: "sunshine", rotate: -3 },
+    { type: "image", src: "/anniversary/photo-10.jpg", caption: "ours", rotate: 2.5 },
+    { type: "video", src: "/anniversary/video-5.mp4", poster: "/anniversary/video-5.jpg", caption: "coming to me", rotate: -2 },
+    { type: "image", src: "/anniversary/photo-11.jpg", caption: "you and me", rotate: 3 },
+    { type: "image", src: "/anniversary/photo-12.jpg", caption: "good morning, you", rotate: -2 },
+    { type: "image", src: "/anniversary/photo-13.jpg", caption: "my whole heart", rotate: 2 },
+    { type: "image", src: "/anniversary/photo-14.jpg", caption: "my favourite view", rotate: -3 },
+    { type: "image", src: "/anniversary/photo-15.jpg", caption: "an ordinary day, made better", rotate: 2.5 },
   ],
   paragraphs: [
-    "Seven months ago you let me love you, and I have spent every day since quietly astonished that you said yes. It is not a long time, as the world measures time. But I have lived more inside these seven months than I did in whole years before you.",
+    "Yes, I said wife. Seven months in and I already know how this one ends, so I stopped pretending otherwise a long time ago.",
 
-    "I did not fall for you in one grand moment. I fell in the small ones. The ordinary mornings. The way you say my name when you are half asleep. The thousand tiny things no photograph can hold and no song can quite say.",
+    "An Igbo boy learning to greet you in Yoruba every morning. That is us, Yomi. You rearranged my whole life so gently that I never felt it happen, until one day I could not picture a single morning without you in it.",
 
-    "This has not been an easy season for you, and still you have been the most alive thing in my life. You have carried so much, for your sister, for your family, for the future you are fighting to build, and somehow you still kept a hand free to hold mine. I will never take that for granted.",
+    "This season has asked so much of you, and you keep meeting it with that stubborn, praying, beautiful heart. I see every bit of it. I am not going anywhere.",
 
-    "So today I am not going to write you anything heavy. Today I only want to say thank you. Thank you for choosing me again on the ordinary days, when choosing is not romantic and is simply a decision you make with your whole tired heart.",
+    "So I made you a small corner of the internet that belongs to no one but us. A few of our moments, a song I am still choosing, and a man who is completely and permanently yours.",
 
-    "Look at these with me. Look at how young we still are in them, and how much has already happened behind those smiles. This is us. This is the beginning of a very long story, and I intend to be here for the whole of it.",
-
-    "Seven months.",
-
-    "And I would sign for seven hundred more without once reading the fine print.",
-
-    "I love you the way I breathe now. Without thinking about it, and without the option to stop.",
-
-    "Happy anniversary, my love. Here is to us, and to every quiet morning still to come.",
+    "Happy seven months, my love. To us, and to every ordinary morning still on its way.",
   ],
 };
 
