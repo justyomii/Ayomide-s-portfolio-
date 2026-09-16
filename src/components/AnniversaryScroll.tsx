@@ -1,31 +1,31 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Play, Volume2, VolumeX, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, Volume2, VolumeX, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type AnniversaryMedia = {
   type?: "image" | "video";
   src: string;
-  caption: string;
+  caption?: string;
   rotate?: number;
-  poster?: string; // optional still frame for videos
+  poster?: string;
 };
 
 export type AnniversaryContent = {
   title: string;
   dateLine: string;
-  startDate: string; // ISO date the relationship began, for the day counter
+  startDate: string;
   opening: string;
   paragraphs: string[];
   media: AnniversaryMedia[];
   signOff: string;
   ps?: string;
-  track: string; // optional mp3, e.g. "/anniversary/theme.mp3"
+  track: string;
 };
 
 /* -------------------------------------------------------------------------- */
-/*  Audio fallback — a warm string pad, if no mp3 is present.                  */
+/*  Audio fallback                                                             */
 /* -------------------------------------------------------------------------- */
 
 type SynthHandle = { stop: () => void; setMuted: (m: boolean) => void };
@@ -35,18 +35,15 @@ function startSynth(): SynthHandle {
     window.AudioContext ??
     (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
   const ctx = new AC();
-
   const master = ctx.createGain();
   master.gain.value = 0.0001;
   master.gain.exponentialRampToValueAtTime(0.15, ctx.currentTime + 4);
-
   const filter = ctx.createBiquadFilter();
   filter.type = "lowpass";
   filter.frequency.value = 1700;
   filter.Q.value = 0.2;
   filter.connect(master);
   master.connect(ctx.destination);
-
   const delay = ctx.createDelay(1.0);
   delay.delayTime.value = 0.42;
   const fb = ctx.createGain();
@@ -58,7 +55,6 @@ function startSynth(): SynthHandle {
   fb.connect(delay);
   delay.connect(wet);
   wet.connect(ctx.destination);
-
   const midi = (n: number) => 440 * Math.pow(2, (n - 69) / 12);
   const chords = [
     [55, 59, 62, 66],
@@ -66,11 +62,9 @@ function startSynth(): SynthHandle {
     [48, 55, 60, 64],
     [53, 57, 60, 65],
   ].map((c) => c.map(midi));
-
   const chordDur = 6.5;
   let idx = 0;
   let stopped = false;
-
   const voice = (freq: number, t: number) => {
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
@@ -99,7 +93,6 @@ function startSynth(): SynthHandle {
     o2.start(t);
     o2.stop(t + chordDur + 0.2);
   };
-
   const schedule = () => {
     if (stopped) return;
     const t = ctx.currentTime + 0.05;
@@ -108,7 +101,6 @@ function startSynth(): SynthHandle {
   };
   schedule();
   const iv = window.setInterval(schedule, (chordDur - 0.9) * 1000);
-
   return {
     stop() {
       stopped = true;
@@ -123,14 +115,16 @@ function startSynth(): SynthHandle {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  A single taped photo or video, with a graceful placeholder.                */
+/*  A single taped photo or video                                             */
 /* -------------------------------------------------------------------------- */
 
 function TapedMedia({
   media,
+  index,
   onOpen,
 }: {
   media: AnniversaryMedia;
+  index: number;
   onOpen: (m: AnniversaryMedia) => void;
 }) {
   const [failed, setFailed] = useState(false);
@@ -141,22 +135,21 @@ function TapedMedia({
     <motion.button
       type="button"
       onClick={() => !failed && onOpen(media)}
-      initial={reduce ? false : { opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      whileHover={reduce || failed ? undefined : { rotate: 0, y: -6, scale: 1.02 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="relative shrink-0 focus:outline-none"
+      initial={reduce ? false : { opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: Math.min(index * 0.04, 0.5), ease: [0.16, 1, 0.3, 1] }}
+      whileHover={reduce || failed ? undefined : { rotate: 0, y: -6, scale: 1.03 }}
+      className="relative shrink-0 snap-center focus:outline-none"
       style={{ transform: `rotate(${media.rotate ?? 0}deg)`, cursor: failed ? "default" : "zoom-in" }}
-      aria-label={media.caption}
+      aria-label={media.caption ?? (isVideo ? "a moment of us, video" : "a moment of us")}
     >
       <span
         aria-hidden
         className="absolute left-1/2 top-[-10px] z-10 h-5 w-16 -translate-x-1/2"
         style={{ background: "rgba(214,197,150,0.4)", boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transform: "rotate(-4deg)" }}
       />
-      <div className="p-3 pb-8" style={{ background: "#f6f1e6", boxShadow: "0 14px 30px -14px rgba(0,0,0,0.55)" }}>
-        <div className="relative h-[190px] w-[168px] overflow-hidden bg-[#d9cbb0]">
+      <div className="p-3 pb-4" style={{ background: "#f6f1e6", boxShadow: "0 14px 30px -14px rgba(0,0,0,0.55)" }}>
+        <div className="relative h-[240px] w-[196px] overflow-hidden bg-[#d9cbb0]">
           {failed ? (
             <div
               className="flex h-full w-full items-center justify-center text-center"
@@ -182,7 +175,7 @@ function TapedMedia({
               />
               <span
                 aria-hidden
-                className="absolute left-1/2 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full"
+                className="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full"
                 style={{ background: "rgba(20,12,5,0.55)", color: "#f6ead2", backdropFilter: "blur(2px)" }}
               >
                 <Play className="h-4 w-4" style={{ marginLeft: 2 }} />
@@ -192,23 +185,25 @@ function TapedMedia({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={media.src}
-              alt={media.caption}
+              alt={media.caption ?? "us"}
               onError={() => setFailed(true)}
               className="h-full w-full object-cover"
-              style={{ filter: "sepia(0.12) contrast(1.02)" }}
+              style={{ filter: "sepia(0.1) contrast(1.02)" }}
             />
           )}
         </div>
-        <p className="mt-3 text-center font-[family-name:var(--font-lora)] text-[13px] italic text-[#6d5842]">
-          {media.caption}
-        </p>
+        {media.caption ? (
+          <p className="mt-3 text-center font-[family-name:var(--font-lora)] text-[13px] italic text-[#6d5842]">
+            {media.caption}
+          </p>
+        ) : null}
       </div>
     </motion.button>
   );
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Scroll furniture                                                           */
+/*  Scroll furniture                                                          */
 /* -------------------------------------------------------------------------- */
 
 const WOOD = "linear-gradient(180deg,#7a5330 0%,#5b3a1e 45%,#43290f 100%)";
@@ -253,6 +248,7 @@ export function AnniversaryScroll({
   const synthRef = useRef<SynthHandle | null>(null);
   const usingTrack = useRef(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const carouselRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -295,11 +291,13 @@ export function AnniversaryScroll({
     };
   }, []);
 
-  // Duck / restore the background music (used while a video plays).
-  const duckBackground = useCallback((duck: boolean) => {
-    if (usingTrack.current && audioRef.current) audioRef.current.muted = duck ? true : muted;
-    synthRef.current?.setMuted(duck ? true : muted);
-  }, [muted]);
+  const duckBackground = useCallback(
+    (duck: boolean) => {
+      if (usingTrack.current && audioRef.current) audioRef.current.muted = duck ? true : muted;
+      synthRef.current?.setMuted(duck ? true : muted);
+    },
+    [muted],
+  );
 
   const handleOpen = useCallback(() => {
     if (opened) return;
@@ -336,6 +334,12 @@ export function AnniversaryScroll({
     setLightbox(null);
   };
 
+  const scrollByCards = (dir: number) => {
+    const el = carouselRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * Math.min(el.clientWidth * 0.85, 460), behavior: "smooth" });
+  };
+
   return (
     <div
       className="fixed inset-0 z-[90] overflow-y-auto"
@@ -343,7 +347,6 @@ export function AnniversaryScroll({
     >
       <audio ref={audioRef} preload="none" src={track} />
 
-      {/* candle glow */}
       {!reduce && (
         <div className="pointer-events-none fixed inset-0" aria-hidden>
           <motion.div
@@ -355,7 +358,6 @@ export function AnniversaryScroll({
         </div>
       )}
 
-      {/* drifting petals */}
       {!reduce && opened && (
         <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden>
           {[8, 22, 40, 58, 72, 88].map((left, i) => (
@@ -382,7 +384,6 @@ export function AnniversaryScroll({
         </div>
       )}
 
-      {/* Mute toggle */}
       <AnimatePresence>
         {opened && (
           <motion.button
@@ -444,7 +445,6 @@ export function AnniversaryScroll({
           <WoodRod />
         </div>
 
-        {/* Rolled seal (before open) */}
         <AnimatePresence>
           {!opened && (
             <motion.button
@@ -481,7 +481,6 @@ export function AnniversaryScroll({
           )}
         </AnimatePresence>
 
-        {/* Parchment (unrolls) */}
         <div
           className="w-full max-w-[720px] overflow-hidden"
           style={{ height: opened ? maxH : 0, transition: reduce ? "none" : "height 1.3s cubic-bezier(0.16,1,0.3,1)" }}
@@ -502,14 +501,51 @@ export function AnniversaryScroll({
                   </p>
                 ))}
               </div>
+            </div>
 
-              <div className="mt-12 flex flex-wrap items-start justify-center gap-6 sm:gap-8">
-                {media.map((m) => (
-                  <TapedMedia key={m.src} media={m} onOpen={openMedia} />
+            {/* Photo & video carousel */}
+            <div className="relative pb-14">
+              <p className="mb-5 text-center font-[family-name:var(--font-cinzel)] text-[11px] tracking-[0.32em] text-[#9a7346]">
+                US, IN MOMENTS
+              </p>
+
+              <div
+                ref={carouselRef}
+                className="flex gap-6 overflow-x-auto scroll-smooth px-7 pb-4 sm:gap-8 sm:px-14 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                style={{ scrollSnapType: "x proximity" }}
+              >
+                {media.map((m, i) => (
+                  <TapedMedia key={m.src} media={m} index={i} onOpen={openMedia} />
                 ))}
+                <span className="shrink-0" style={{ width: 8 }} aria-hidden />
               </div>
 
-              <div className="mx-auto mt-14 flex max-w-[560px] items-center gap-4">
+              <button
+                type="button"
+                onClick={() => scrollByCards(-1)}
+                aria-label="Previous"
+                className="absolute left-3 top-[52%] hidden h-10 w-10 items-center justify-center rounded-full border transition-colors hover:bg-[#efe4cb] md:flex"
+                style={{ borderColor: "#c9b48c", color: "#5a4227", background: "rgba(246,241,230,0.85)" }}
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollByCards(1)}
+                aria-label="Next"
+                className="absolute right-3 top-[52%] hidden h-10 w-10 items-center justify-center rounded-full border transition-colors hover:bg-[#efe4cb] md:flex"
+                style={{ borderColor: "#c9b48c", color: "#5a4227", background: "rgba(246,241,230,0.85)" }}
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+
+              <p className="mt-4 text-center font-[family-name:var(--font-lora)] text-[12px] italic text-[#9a7346]">
+                swipe through us
+              </p>
+            </div>
+
+            <div className="relative px-7 pb-14 sm:px-14">
+              <div className="mx-auto flex max-w-[560px] items-center gap-4">
                 <span className="h-px flex-1" style={{ background: "#c9b48c" }} />
                 <span className="font-[family-name:var(--font-cinzel)] text-[18px] tracking-[0.08em] text-[#7f2f26]">
                   {signOff}
@@ -518,15 +554,9 @@ export function AnniversaryScroll({
               </div>
 
               {ps && (
-                <motion.p
-                  initial={reduce ? false : { opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true, margin: "-30px" }}
-                  transition={{ duration: 0.8 }}
-                  className="mx-auto mt-10 max-w-[560px] text-center font-[family-name:var(--font-lora)] text-[14px] italic text-[#6d5842]"
-                >
+                <p className="mx-auto mt-10 max-w-[560px] text-center font-[family-name:var(--font-lora)] text-[14px] italic text-[#6d5842]">
                   {ps}
-                </motion.p>
+                </p>
               )}
             </div>
           </div>
@@ -539,7 +569,6 @@ export function AnniversaryScroll({
         </div>
       </div>
 
-      {/* Lightbox (image or video) */}
       <AnimatePresence>
         {lightbox && (
           <motion.div
@@ -563,31 +592,21 @@ export function AnniversaryScroll({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.96, opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="max-h-[86vh] max-w-[86vw] p-3 pb-6"
+              className="max-h-[86vh] max-w-[86vw] p-3"
               style={{ background: "#f6f1e6", boxShadow: "0 30px 70px -20px rgba(0,0,0,0.8)" }}
               onClick={(e) => e.stopPropagation()}
             >
               {lightbox.type === "video" ? (
-                <video
-                  src={lightbox.src}
-                  poster={lightbox.poster}
-                  controls
-                  autoPlay
-                  playsInline
-                  className="max-h-[74vh] max-w-full object-contain"
-                />
+                <video src={lightbox.src} poster={lightbox.poster} controls autoPlay playsInline className="max-h-[80vh] max-w-full object-contain" />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={lightbox.src}
-                  alt={lightbox.caption}
-                  className="max-h-[74vh] max-w-full object-contain"
-                  style={{ filter: "sepia(0.1)" }}
-                />
+                <img src={lightbox.src} alt={lightbox.caption ?? "us"} className="max-h-[80vh] max-w-full object-contain" style={{ filter: "sepia(0.08)" }} />
               )}
-              <figcaption className="mt-3 text-center font-[family-name:var(--font-lora)] text-[14px] italic text-[#6d5842]">
-                {lightbox.caption}
-              </figcaption>
+              {lightbox.caption ? (
+                <figcaption className="mt-3 text-center font-[family-name:var(--font-lora)] text-[14px] italic text-[#6d5842]">
+                  {lightbox.caption}
+                </figcaption>
+              ) : null}
             </motion.figure>
           </motion.div>
         )}

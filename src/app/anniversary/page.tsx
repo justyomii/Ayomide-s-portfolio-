@@ -8,40 +8,68 @@ const content: AnniversaryContent = {
   opening: "Ẹ káàárọ̀, ìyàwó mi ẹlẹ́wà, arẹwà mi.",
   track: "/anniversary/theme.mp3",
   signOff: "Akachukwu",
-  ps: "P.S. Scroll down slowly. I kept a few of us.",
-  // Curated from the "yomi" folder, web-optimized. Captions are yours to edit.
+  ps: "P.S. That song is yours now. So am I.",
+  // Curated + web-optimized from the "yomi" folder. No captions by design;
+  // add a caption to any entry if you ever want one. Reorder freely.
   media: [
-    { type: "image", src: "/anniversary/photo-1.jpg", caption: "the two of us", rotate: -3 },
-    { type: "image", src: "/anniversary/photo-2.jpg", caption: "this smile", rotate: 2.5 },
-    { type: "video", src: "/anniversary/video-1.mp4", poster: "/anniversary/video-1.jpg", caption: "us, being ridiculous", rotate: -2 },
-    { type: "image", src: "/anniversary/photo-3.jpg", caption: "us", rotate: 3 },
-    { type: "image", src: "/anniversary/photo-4.jpg", caption: "my favourite person", rotate: -2 },
-    { type: "video", src: "/anniversary/video-2.mp4", poster: "/anniversary/video-2.jpg", caption: "your laugh", rotate: 2 },
-    { type: "image", src: "/anniversary/photo-5.jpg", caption: "just us", rotate: -3 },
-    { type: "image", src: "/anniversary/photo-6.jpg", caption: "that face I love", rotate: 2 },
-    { type: "video", src: "/anniversary/video-3.mp4", poster: "/anniversary/video-3.jpg", caption: "you, unfiltered", rotate: -1.5 },
-    { type: "image", src: "/anniversary/photo-7.jpg", caption: "caught you", rotate: 3 },
-    { type: "image", src: "/anniversary/photo-8.jpg", caption: "me, waiting for you", rotate: -2.5 },
-    { type: "video", src: "/anniversary/video-4.mp4", poster: "/anniversary/video-4.jpg", caption: "a whole minute of us", rotate: 2 },
-    { type: "image", src: "/anniversary/photo-9.jpg", caption: "sunshine", rotate: -3 },
-    { type: "image", src: "/anniversary/photo-10.jpg", caption: "ours", rotate: 2.5 },
-    { type: "video", src: "/anniversary/video-5.mp4", poster: "/anniversary/video-5.jpg", caption: "coming to me", rotate: -2 },
-    { type: "image", src: "/anniversary/photo-11.jpg", caption: "you and me", rotate: 3 },
-    { type: "image", src: "/anniversary/photo-12.jpg", caption: "good morning, you", rotate: -2 },
-    { type: "image", src: "/anniversary/photo-13.jpg", caption: "my whole heart", rotate: 2 },
-    { type: "image", src: "/anniversary/photo-14.jpg", caption: "my favourite view", rotate: -3 },
-    { type: "image", src: "/anniversary/photo-15.jpg", caption: "an ordinary day, made better", rotate: 2.5 },
+    { type: "image", src: "/anniversary/photo-1.jpg", rotate: -3 },
+    { type: "image", src: "/anniversary/photo-2.jpg", rotate: 2.5 },
+    { type: "video", src: "/anniversary/video-1.mp4", poster: "/anniversary/video-1.jpg", rotate: -2 },
+    { type: "image", src: "/anniversary/photo-3.jpg", rotate: 2 },
+    { type: "image", src: "/anniversary/photo-4.jpg", rotate: -2.5 },
+    { type: "video", src: "/anniversary/video-6.mp4", poster: "/anniversary/video-6.jpg", rotate: 3 },
+    { type: "image", src: "/anniversary/photo-5.jpg", rotate: -2 },
+    { type: "image", src: "/anniversary/photo-6.jpg", rotate: 2.5 },
+    { type: "video", src: "/anniversary/video-2.mp4", poster: "/anniversary/video-2.jpg", rotate: -3 },
+    { type: "image", src: "/anniversary/photo-7.jpg", rotate: 2 },
+    { type: "image", src: "/anniversary/photo-8.jpg", rotate: -2.5 },
+    { type: "video", src: "/anniversary/video-7.mp4", poster: "/anniversary/video-7.jpg", rotate: 2.5 },
+    { type: "image", src: "/anniversary/photo-9.jpg", rotate: -2 },
+    { type: "image", src: "/anniversary/photo-10.jpg", rotate: 3 },
+    { type: "video", src: "/anniversary/video-3.mp4", poster: "/anniversary/video-3.jpg", rotate: -2 },
+    { type: "image", src: "/anniversary/photo-11.jpg", rotate: 2 },
+    { type: "image", src: "/anniversary/photo-12.jpg", rotate: -3 },
+    { type: "video", src: "/anniversary/video-8.mp4", poster: "/anniversary/video-8.jpg", rotate: 2.5 },
+    { type: "image", src: "/anniversary/photo-13.jpg", rotate: -2 },
+    { type: "image", src: "/anniversary/photo-14.jpg", rotate: 3 },
+    { type: "video", src: "/anniversary/video-4.mp4", poster: "/anniversary/video-4.jpg", rotate: -2.5 },
+    { type: "image", src: "/anniversary/photo-15.jpg", rotate: 2 },
+    { type: "image", src: "/anniversary/photo-16.jpg", rotate: -3 },
+    { type: "image", src: "/anniversary/photo-17.jpg", rotate: 2.5 },
+    { type: "video", src: "/anniversary/video-5.mp4", poster: "/anniversary/video-5.jpg", rotate: -2 },
+    { type: "image", src: "/anniversary/photo-18.jpg", rotate: 3 },
+    { type: "image", src: "/anniversary/photo-19.jpg", rotate: -2.5 },
+    { type: "image", src: "/anniversary/photo-20.jpg", rotate: 2 },
+    { type: "image", src: "/anniversary/photo-21.jpg", rotate: -3 },
+    { type: "image", src: "/anniversary/photo-22.jpg", rotate: 2.5 },
+    { type: "image", src: "/anniversary/photo-23.jpg", rotate: -2 },
+    { type: "image", src: "/anniversary/photo-24.jpg", rotate: 3 },
+    { type: "image", src: "/anniversary/photo-25.jpg", rotate: -2.5 },
   ],
   paragraphs: [
-    "Yes, I said wife. Seven months in and I already know how this one ends, so I stopped pretending otherwise a long time ago.",
+    "Yes, I called you wife again. I am going to keep doing it until it stops surprising you, and then a little while after that, because seven months in I already know exactly how this story ends.",
 
-    "An Igbo boy learning to greet you in Yoruba every morning. That is us, Yomi. You rearranged my whole life so gently that I never felt it happen, until one day I could not picture a single morning without you in it.",
+    "An Igbo boy who learned to greet a Yoruba girl good morning in her own language. If someone had told me a year ago that this is who I would become, I would have laughed at them. Now I cannot imagine opening my eyes to any first thought that is not you.",
 
-    "This season has asked so much of you, and you keep meeting it with that stubborn, praying, beautiful heart. I see every bit of it. I am not going anywhere.",
+    "I did not fall for you in one big dramatic moment. I fell in the small ones. The way you say my name when you are half asleep. The voice notes that go on far too long. The random calls in the middle of an ordinary day. The thousand tiny things no photograph can hold and no song can quite say.",
 
-    "So I made you a small corner of the internet that belongs to no one but us. A few of our moments, a song I am still choosing, and a man who is completely and permanently yours.",
+    "This has not been a soft season for you, Yomi. You have been fighting for your sister's place in school, chasing a job that keeps making you wait, teaching yourself a whole new skill in the dark with nobody clapping, and carrying a conversation with your parents in your chest that frightens you. And somehow, through all of it, you still keep a hand free to hold mine.",
 
-    "Happy seven months, my love. To us, and to every ordinary morning still on its way.",
+    "I watch you pray. I watch you get up on the mornings that have no reason to be kind, and decide to push anyway. I watch you reach for God when the fog is at its thickest. I do not have the words for how much that moves me, so I will just say the plain version: I have never respected anyone the way I respect you.",
+
+    "You think I do not notice how tired you are. I notice everything. And not once has it made me want you less. If anything, watching you carry all of it with that stubborn, praying, beautiful heart is exactly why I stopped keeping one foot near the door a long time ago.",
+
+    "So let me say the simple thing clearly. I am not going anywhere. Not when it is hard, not when you go quiet, not when the answers are slow to come. Whatever this season asks of you, it does not get to ask it of you alone. To my last breath, I am yours.",
+
+    "I made you this little corner of the internet because I wanted somewhere that belongs to no one but us. Scroll down slowly. I kept our moments in here. The silly ones and the soft ones. The days we looked like models, and the days we looked like two tired people who are quietly, stubbornly in love.",
+
+    "Look at us. Look at how young we still are in these, and how much has already happened behind those smiles. This is the very beginning of a very long story, and I fully intend to be here for every unremarkable, extraordinary page of it.",
+
+    "There is a song playing while you read this. I chose it on purpose. Every word of it is only the truth, said better than I know how to say it.",
+
+    "Happy seven months, my love. Thank you for choosing me on the ordinary days, when choosing is not romantic and is simply a decision you make with your whole tired heart. I would choose you again this morning, and tomorrow morning, and every morning after that, without once reading the fine print.",
+
+    "Ẹ ṣé, ìyàwó mi. For all of it. I love you, and I am not even a little bit finished.",
   ],
 };
 
